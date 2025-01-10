@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .display {
+            grid-column: span 4;
+            background-color: #333;
+            color: white;
+            text-align: right;
+            padding: 20px;
+            font-size: 2em;
+            word-wrap: break-word;
+        }
+        .button {
+            padding: 20px;
+            background-color: #ccc;
+            border: 1px solid #999;
+            text-align: center;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #bbb;
+        }
+        .button.operator {
+            background-color: #f0a;
+            color: white;
+        }
+        .button.equal {
+            grid-column: span 2;
+            background-color: #0a0;
+            color: white;
+        }
+        .button.clear {
+            grid-column: span 2;
+            background-color: #a00;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="button" data-value="7">7</div>
+    <div class="button" data-value="8">8</div>
+    <div class="button" data-value="9">9</div>
+    <div class="button operator" data-value="/">/</div>
+    <div class="button" data-value="4">4</div>
+    <div class="button" data-value="5">5</div>
+    <div class="button" data-value="6">6</div>
+    <div class="button operator" data-value="*">*</div>
+    <div class="button" data-value="1">1</div>
+    <div class="button" data-value="2">2</div>
+    <div class="button" data-value="3">3</div>
+    <div class="button operator" data-value="-">-</div>
+    <div class="button" data-value="0">0</div>
+    <div class="button operator" data-value="+">+</div>
+    <div class="button clear" data-value="clear">C</div>
+    <div class="button equal" data-value="=">=</div>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+    const buttons = Array.from(document.querySelectorAll('.button'));
+    
+    let currentInput = '';
+    let previousInput = '';
+    let operator = '';
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const value = button.getAttribute('data-value');
+
+            if (value === 'clear') {
+                currentInput = '';
+                previousInput = '';
+                operator = '';
+                display.textContent = '0';
+            } else if (value === '=') {
+                if (currentInput && previousInput && operator) {
+                    currentInput = eval(`${previousInput}${operator}${currentInput}`);
+                    operator = '';
+                    previousInput = '';
+                    display.textContent = currentInput;
+                }
+            } else if (['+', '-', '*', '/'].includes(value)) {
+                if (currentInput) {
+                    previousInput = currentInput;
+                    currentInput = '';
+                    operator = value;
+                }
+            } else {
+                currentInput += value;
+                display.textContent = currentInput;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
